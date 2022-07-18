@@ -11,14 +11,12 @@ import me.strafe.utils.handlers.TextRenderer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static me.strafe.utils.Registers.Registers.*;
 
