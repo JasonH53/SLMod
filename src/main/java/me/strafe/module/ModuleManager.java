@@ -2,15 +2,12 @@ package me.strafe.module;
 
 import java.util.ArrayList;
 
-import me.strafe.module.fishing.AutoFish;
+//import me.strafe.module.fishing.AutoFish;
 import me.strafe.module.render.ClickGUI;
 import me.strafe.module.render.HUD;
 import me.strafe.module.render.PlayerDisplayer;
 import me.strafe.module.render.ReloadConfig;
-import me.strafe.module.skyblock.AutoKuudra;
-import me.strafe.module.skyblock.GhostBlock;
-import me.strafe.module.skyblock.HyperionClicker;
-import me.strafe.module.skyblock.Velocity;
+import me.strafe.module.skyblock.*;
 
 public class ModuleManager {
 
@@ -19,7 +16,7 @@ public class ModuleManager {
 	public ModuleManager() {
 		(modules = new ArrayList<Module>()).clear();
 		this.modules.add(new ClickGUI());
-		this.modules.add(new AutoFish());
+//		this.modules.add(new AutoFish());
 		this.modules.add(new PlayerDisplayer());
 		this.modules.add(new HUD());
 		this.modules.add(new HyperionClicker());
@@ -27,6 +24,7 @@ public class ModuleManager {
 		this.modules.add(new GhostBlock());
 		this.modules.add(new Velocity());
 //		this.modules.add(new AutoKuudra());
+		this.modules.add(new AntiAfk());
 	}
 	
 	public Module getModule(String name) {

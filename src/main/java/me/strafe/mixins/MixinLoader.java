@@ -6,12 +6,10 @@
 //import org.spongepowered.asm.mixin.MixinEnvironment;
 //import org.spongepowered.asm.mixin.Mixins;
 //
-//public class MixinLoader
-//        implements IFMLLoadingPlugin {
+//public class MixinLoader implements IFMLLoadingPlugin {
 //    public MixinLoader() {
 //        MixinBootstrap.init();
 //        Mixins.addConfiguration("mixins.STRAFE.json");
-//        MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
 //    }
 //
 //    public String[] getASMTransformerClass() {
