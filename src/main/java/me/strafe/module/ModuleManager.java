@@ -23,7 +23,7 @@ public class ModuleManager {
 		this.modules.add(new ReloadConfig());
 		this.modules.add(new GhostBlock());
 		this.modules.add(new Velocity());
-//		this.modules.add(new AutoKuudra());
+		this.modules.add(new AutoKuudra());
 		this.modules.add(new AntiAfk());
 	}
 	

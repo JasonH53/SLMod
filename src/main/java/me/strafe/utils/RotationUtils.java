@@ -95,4 +95,17 @@ public class RotationUtils {
         endTime = 0L;
     }
 
+    public static Vec3 getLook(Vec3 vec) {
+        double diffX = vec.xCoord - RotationUtils.mc.thePlayer.posX;
+        double diffY = vec.yCoord - (RotationUtils.mc.thePlayer.posY + (double)RotationUtils.mc.thePlayer.getEyeHeight());
+        double diffZ = vec.zCoord - RotationUtils.mc.thePlayer.posZ;
+        double dist = MathHelper.sqrt_double((double)(diffX * diffX + diffZ * diffZ));
+        return RotationUtils.getVectorForRotation((float)(-(MathHelper.atan2((double)diffY, (double)dist) * 180.0 / Math.PI)), (float)(MathHelper.atan2((double)diffZ, (double)diffX) * 180.0 / Math.PI - 90.0));
+    }
+
+    public static Vec3 getVectorForRotation(float pitch, float yaw) {
+        float f2 = -MathHelper.cos((float)(-pitch * ((float)Math.PI / 180)));
+        return new Vec3(MathHelper.sin((float)(-yaw * ((float)Math.PI / 180) - (float)Math.PI)) * f2, MathHelper.sin((float)(-pitch * ((float)Math.PI / 180))), MathHelper.cos((float)(-yaw * ((float)Math.PI / 180) - (float)Math.PI)) * f2);
+    }
+
 }
