@@ -7,10 +7,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 
-public class LoadFile {
-    public static void LoadFile() throws IOException {
+public class LoadFriends {
+    public static void LoadFile() {
         String path = Minecraft.getMinecraft().mcDataDir + File.separator + "mods" + File.separator + "strafeconfig_friends.txt";
         File file = new File(path);
         try {

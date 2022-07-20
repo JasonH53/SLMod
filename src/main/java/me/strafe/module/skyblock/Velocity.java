@@ -20,6 +20,7 @@ public class Velocity extends Module {
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent e) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         float horizontal = (float) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Horizontal").getValDouble();
         float vertical = (float) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Horizontal").getValDouble();
         if (mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime && mc.thePlayer.maxHurtTime > 0) {

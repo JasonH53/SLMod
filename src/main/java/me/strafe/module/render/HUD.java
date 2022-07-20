@@ -5,6 +5,7 @@ import me.strafe.module.Category;
 import me.strafe.module.Module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,6 +18,7 @@ public class HUD extends Module {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent egoe) {
+        if (mc.thePlayer == null || mc.theWorld == null || mc.gameSettings.showDebugInfo || (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))) return;
         if (!egoe.type.equals(egoe.type.TEXT.CROSSHAIRS)) {
             return;
         }

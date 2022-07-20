@@ -26,6 +26,7 @@ public class GhostBlock extends Module {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
         if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
             if (GhostBlock.mc.currentScreen == null) {
                 if (mc.objectMouseOver.getBlockPos() == null) {

@@ -1,8 +1,4 @@
 import me.strafe.StrafeLegitMod;
-import me.strafe.config.LoadFile;
-import me.strafe.events.MotionUpdateEvent;
-import me.strafe.module.Module;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

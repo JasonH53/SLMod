@@ -1,6 +1,7 @@
 package me.strafe.module.render;
 
 import me.strafe.StrafeLegitMod;
+import me.strafe.config.LoadFriends;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
@@ -8,6 +9,7 @@ import me.strafe.utils.ChatUtils;
 import me.strafe.utils.DiscordWebhook;
 import me.strafe.utils.Utils;
 import me.strafe.utils.handlers.TextRenderer;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,15 +53,15 @@ public class PlayerDisplayer extends Module {
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Ear Rape", this, false));
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send to Webhook", this, false));
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send Fed to party chat", this, false));
-//        StrafeLegitMod.instance.settingsManager.rSetting(new Setting());
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Distance", this, 40, 0, 60, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 200, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 200, false));
+        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 1080, false));
+        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 1920, false));
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
+        LoadFriends.LoadFile();
         active = true;
     }
 
@@ -78,8 +80,9 @@ public class PlayerDisplayer extends Module {
 
     @SubscribeEvent
     public void onRender(TickEvent.RenderTickEvent e) throws IOException, InterruptedException {
+        if (mc.thePlayer == null || mc.theWorld == null || mc.gameSettings.showDebugInfo || (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))) return;
 
-        if (!active || PlayerDisplayer.mc.thePlayer == null) {
+        if (!active ) {
             return;
         }
         if (PlayerDisplayer.mc.currentScreen == null) {
@@ -170,6 +173,7 @@ public class PlayerDisplayer extends Module {
 
         @SubscribeEvent
         public void onTick (TickEvent.ClientTickEvent event){
+            if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
             if (Checking) {
                 if (++timeout >= 200) {
                     timeout = 0;

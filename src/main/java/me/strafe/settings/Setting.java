@@ -2,6 +2,7 @@ package me.strafe.settings;
 
 import java.util.ArrayList;
 
+import me.strafe.StrafeLegitMod;
 import me.strafe.module.Module;
 
 /**
@@ -67,6 +68,9 @@ public class Setting {
 	
 	public void setValString(String in){
 		this.sval = in;
+		if (StrafeLegitMod.instance.saveLoad != null) {
+			StrafeLegitMod.instance.saveLoad.save();
+		}
 	}
 	
 	public ArrayList<String> getOptions(){
@@ -79,6 +83,9 @@ public class Setting {
 	
 	public void setValBoolean(boolean in){
 		this.bval = in;
+		if (StrafeLegitMod.instance.saveLoad != null) {
+			StrafeLegitMod.instance.saveLoad.save();
+		}
 	}
 	
 	public double getValDouble(){
@@ -90,6 +97,9 @@ public class Setting {
 
 	public void setValDouble(double in){
 		this.dval = in;
+		if (StrafeLegitMod.instance.saveLoad != null) {
+			StrafeLegitMod.instance.saveLoad.save();
+		}
 	}
 	
 	public double getMin(){

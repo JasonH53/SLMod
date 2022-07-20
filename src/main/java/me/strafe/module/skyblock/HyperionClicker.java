@@ -30,6 +30,7 @@ public class HyperionClicker extends Module {
 
     @SubscribeEvent
     public void onTick(TickEvent.RenderTickEvent e) {
+        if (e.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
         if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Left/Right").getValBoolean() == false) {
             if (Mouse.isButtonDown(0)) {
                 if (System.currentTimeMillis() - LastClick > speed * 1000) {

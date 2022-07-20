@@ -1,6 +1,8 @@
 package me.strafe.module;
 
 import com.google.gson.JsonObject;
+import me.strafe.StrafeLegitMod;
+import me.strafe.config.SaveLoad;
 import me.strafe.settings.Setting;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +43,9 @@ public class Module {
 
 	public void setKey(int key) {
 		this.key = key;
+		if (StrafeLegitMod.instance.saveLoad != null) {
+			StrafeLegitMod.instance.saveLoad.save();
+		}
 	}
 
 	public boolean isToggled() {
@@ -65,6 +70,9 @@ public class Module {
 		} else {
 			this.onDisable();
 		}
+		if (StrafeLegitMod.instance.saveLoad != null) {
+			StrafeLegitMod.instance.saveLoad.save();
+		}
 	}
 	
 	public void onEnable() {
@@ -81,6 +89,16 @@ public class Module {
 	
 	public Category getCategory() {
 		return this.category;
+	}
+
+	public void enableOnStartup() {
+		toggled = true;
+		try {
+			toggle();
+			onEnable();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
