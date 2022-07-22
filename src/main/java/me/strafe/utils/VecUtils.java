@@ -20,6 +20,10 @@ public class VecUtils {
         }
     };
 
+    public static Vec3 scaleVec(Vec3 vec3, float scale) {
+        return new Vec3(vec3.xCoord * scale, vec3.yCoord * scale, vec3.zCoord * scale);
+    }
+
     public static Vec3 floorVec(Vec3 vec3) {
         return new Vec3(Math.floor(vec3.xCoord), Math.floor(vec3.yCoord), Math.floor(vec3.zCoord));
     }
@@ -39,8 +43,8 @@ public class VecUtils {
         Rotation neededRot = RotationUtils.getNeededChange(RotationUtils.getRotation(from, to));
         double neededYaw = neededRot.getYaw() * -1.0f;
         keyBindMap.forEach((k, v) -> {
-            if (Math.abs((double)k.intValue() - neededYaw) < 67.5 || Math.abs((double)k.intValue() - (neededYaw + 360.0)) < 67.5) {
-                damnIThinkIShouldHaveRatherUsed4SwitchCasesToDetermineTheNeededKeyPresses.add((KeyBinding)v);
+            if (Math.abs((double) k - neededYaw) < 67.5 || Math.abs((double) k - (neededYaw + 360.0)) < 67.5) {
+                damnIThinkIShouldHaveRatherUsed4SwitchCasesToDetermineTheNeededKeyPresses.add(v);
             }
         });
         return damnIThinkIShouldHaveRatherUsed4SwitchCasesToDetermineTheNeededKeyPresses;
