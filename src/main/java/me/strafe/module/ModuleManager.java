@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 //import me.strafe.module.fishing.AutoFish;
 import me.strafe.StrafeLegitMod;
-import me.strafe.module.render.ClickGUI;
-import me.strafe.module.render.HUD;
-import me.strafe.module.render.PlayerDisplayer;
-import me.strafe.module.render.ReloadConfig;
+import me.strafe.module.render.*;
 import me.strafe.module.skyblock.*;
 
 public class ModuleManager {
@@ -26,6 +23,11 @@ public class ModuleManager {
         this.modules.add(new Velocity());
         this.modules.add(new AutoKuudra());
         this.modules.add(new AntiAfk());
+        this.modules.add(new Notifications());
+        this.modules.add(new AutoGloom());
+        this.modules.add(new EntityReach());
+        this.modules.add(new AutoBuy());
+        this.modules.add(new ChestStealer());
     }
 
     public Module getModule(String name) {

@@ -15,9 +15,7 @@ public class LoadFriends {
         try {
             Boolean flag = file.createNewFile();
             if (flag) {
-                System.out.println("File created");
             } else {
-                System.out.println("file exists");
                 BufferedReader dataIn;
                 String c;
 

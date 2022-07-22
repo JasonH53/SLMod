@@ -4,7 +4,9 @@ import com.google.gson.JsonObject;
 import me.strafe.StrafeLegitMod;
 import me.strafe.config.SaveLoad;
 import me.strafe.settings.Setting;
+import me.strafe.utils.ChatUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ public class Module {
 	private Category category;
 	private boolean toggled;
 	public boolean visible = true;
-
+	public static boolean messagetoggle = true;
 
 	public Module(String name, String description, Category category) {
 		super();
@@ -77,10 +79,16 @@ public class Module {
 	
 	public void onEnable() {
 		MinecraftForge.EVENT_BUS.register(this);
+		if (mc.thePlayer!= null && messagetoggle) {
+			ChatUtils.addChatMessage(EnumChatFormatting.DARK_RED + this.name + EnumChatFormatting.WHITE + " is toggled "+ EnumChatFormatting.GREEN + "ON" + EnumChatFormatting.WHITE + ".");
+		}
 	}
 	
 	public void onDisable() {
 		MinecraftForge.EVENT_BUS.unregister(this);
+		if (mc.thePlayer!= null && messagetoggle) {
+			ChatUtils.addChatMessage(EnumChatFormatting.DARK_RED + this.name + EnumChatFormatting.WHITE + " is toggled " + EnumChatFormatting.RED + "OFF" + EnumChatFormatting.WHITE + ".");
+		}
 	}
 	
 	public String getName() {
@@ -99,6 +107,10 @@ public class Module {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void toggleToggleMessages(boolean b) {
+		messagetoggle = b;
 	}
 
 

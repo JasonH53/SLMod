@@ -1,41 +1,22 @@
 package me.strafe.module.skyblock;
 
 import me.strafe.StrafeLegitMod;
-import me.strafe.events.MotionUpdateEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
-import me.strafe.module.ModuleManager;
-import me.strafe.module.render.PlayerDisplayer;
 import me.strafe.settings.Setting;
-import me.strafe.utils.RandomUtil;
+import me.strafe.utils.Location;
 import me.strafe.utils.Rotation;
 import me.strafe.utils.RotationUtils;
 import me.strafe.utils.Stolenutils;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 
 public class AutoKuudra extends Module {
     public static Rotation startRot = null;
@@ -70,22 +51,20 @@ public class AutoKuudra extends Module {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
-        if (!invopen) {
-            for (Iterator<Entity> entities = mc.theWorld.loadedEntityList.iterator(); entities.hasNext(); ) {
-                Object theObject = entities.next();
-                if (theObject instanceof EntityWither) {
-                    EntityLivingBase entity = (EntityLivingBase) theObject;
-                    if (entity instanceof EntityPlayerSP) continue;
-                    if (mc.thePlayer.getDistanceToEntity(entity) <= 50) {
-                        if (entity.isEntityAlive()) {
+        if (!invopen && Location.isInKuudra()) {
+            for (Entity entity : mc.theWorld.loadedEntityList) {
+                if (entity instanceof EntityWither) {
+                    EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
+//                    if (entity instanceof EntityPlayerSP) continue;
+                    if (mc.thePlayer.getDistanceToEntity(entityLivingBase) <= 50) {
+                        if (entityLivingBase.isEntityAlive()) {
                             dead=false;
-                            entity2 = entity;
-                            RotationUtils.setup(RotationUtils.getRotation(entity.getPositionVector().addVector(0.0, entity.getEyeHeight() - 8, 0.0)), Long.valueOf((int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Aim Speed").getValDouble()));
+                            entity2 = entityLivingBase;
+                            RotationUtils.setup(RotationUtils.getRotation(entityLivingBase.getPositionVector().addVector(0.0, entityLivingBase.getEyeHeight() - 8, 0.0)), (long) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Aim Speed").getValDouble());
                             if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Right Click Mode").getValBoolean()) {
                                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
                             }
-                            continue;
-                        } else if (entity.isDead) {
+                        } else if (entityLivingBase.isDead) {
                             dead=true;
                         }
                     }
@@ -114,7 +93,7 @@ public class AutoKuudra extends Module {
     public void r1(RenderWorldLastEvent e) {
         if (mc.thePlayer == null || mc.theWorld == null || mc.gameSettings.showDebugInfo) return;
         if(StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Highlight Wither").getValBoolean() && !dead) {
-            Stolenutils.HUD.drawBoxAroundEntity(entity2, 1, 7, 0, 0, false);
+            Stolenutils.HUD.drawBoxAroundEntity(entity2, 1, 8, 0, 0, false);
         }
     }
 
@@ -124,5 +103,7 @@ public class AutoKuudra extends Module {
         dead=false;
         invopen=false;
     }
+
+
 
 }

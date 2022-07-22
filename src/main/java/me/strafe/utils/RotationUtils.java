@@ -19,16 +19,6 @@ public class RotationUtils {
     private RotationUtils() {
     }
 
-//    public static float[] getAngles(Vec3 vec) {
-//        double diffX = vec.xCoord - mc.thePlayer.posX;
-//        double diffY = vec.yCoord - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
-//        double diffZ = vec.zCoord - mc.thePlayer.posZ;
-//        double dist = MathHelper.sqrt_double((double)(diffX * diffX + diffZ * diffZ));
-//        float yaw = (float)(Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90.0f;
-//        float pitch = (float)(-(Math.atan2(diffY, dist) * 180.0 / Math.PI));
-//        return new float[]{mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float((float)(yaw - mc.thePlayer.rotationYaw)), mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float((float)(pitch - mc.thePlayer.rotationPitch))};
-//    }
-
     public static void setup(Rotation rot, Long aimTime) {
         done = false;
         startRot = new Rotation(RotationUtils.mc.thePlayer.rotationYaw, RotationUtils.mc.thePlayer.rotationPitch);

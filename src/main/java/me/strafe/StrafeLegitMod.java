@@ -1,6 +1,8 @@
 package me.strafe;
 
 import me.strafe.config.SaveLoad;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
 import me.strafe.clickgui.ClickGui;
@@ -14,6 +16,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import org.lwjgl.opengl.Display;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class StrafeLegitMod
 {
@@ -22,6 +25,7 @@ public class StrafeLegitMod
     public SettingsManager settingsManager;
     public ClickGui clickGui;
     public SaveLoad saveLoad;
+    public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
     
     public void init() throws IOException {
     	MinecraftForge.EVENT_BUS.register(this);
@@ -30,6 +34,12 @@ public class StrafeLegitMod
     	clickGui = new ClickGui();
         Display.setTitle("STRAFE LEGIT CLIENT");
         saveLoad = new SaveLoad();
+
+        keybinds.add(new KeyBinding("Open Kuudra Shop", Keyboard.KEY_NONE, "RealAutoGG")); //0
+
+        for (KeyBinding keyBinding : keybinds) {
+            ClientRegistry.registerKeyBinding(keyBinding);
+        }
     }
     
     @SubscribeEvent

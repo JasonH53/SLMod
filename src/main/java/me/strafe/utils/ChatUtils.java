@@ -10,13 +10,16 @@ public class ChatUtils {
     public static boolean ContainSelf;
     public static boolean CancelMessage;
 
-    public static void addChatMessage(String Message) {
-        Message = Message.replace("&", "§");
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_PURPLE + "[STRAFE]" + Message));
+    public static void addChatMessage(Object Message) {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE + "[STRAFE] " + Message.toString().replace("&", "§")));
     }
 
     public static void addMessageWithoutPrefix(String Message) {
         Message = Message.replace("&", "§");
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(Message));
+    }
+
+    public static void addVanillaMessage(String Message) {
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(Message));
     }
 

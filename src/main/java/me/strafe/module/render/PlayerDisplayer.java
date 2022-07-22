@@ -25,22 +25,15 @@ import static me.strafe.utils.Registers.Registers.*;
 public class PlayerDisplayer extends Module {
 
     public boolean active;
-    public boolean reset;
     public static String Watchdog;
     public static ArrayList<String> Checked;
     public static boolean Checking;
-    public static String Guild;
     public static int timeout;
     public static String name2;
+    public static boolean rga = false;
     public static String name3;
-    public static int tick = 0;
-    public static int tick2 = 0;
     public static boolean leo = false;
     public static boolean leo2 = false;
-    public static boolean jerry_li = true;
-    public static int jerry = 0;
-
-    public static String[] daysuki = new String[35];
 
     public PlayerDisplayer() {
         super("FED Detector", "Shows Players", Category.RENDER);
@@ -54,14 +47,13 @@ public class PlayerDisplayer extends Module {
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send to Webhook", this, false));
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send Fed to party chat", this, false));
         StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Distance", this, 40, 0, 60, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 1080, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 1920, false));
+        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 900, false));
+        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 450, false));
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
-        LoadFriends.LoadFile();
         active = true;
     }
 
@@ -79,10 +71,11 @@ public class PlayerDisplayer extends Module {
     }
 
     @SubscribeEvent
-    public void onRender(TickEvent.RenderTickEvent e) throws IOException, InterruptedException {
-        if (mc.thePlayer == null || mc.theWorld == null || mc.gameSettings.showDebugInfo || (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))) return;
+    public void onRender(TickEvent.RenderTickEvent e) {
+        if (mc.thePlayer == null || mc.theWorld == null || mc.gameSettings.showDebugInfo || (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat)))
+            return;
 
-        if (!active ) {
+        if (!active) {
             return;
         }
         if (PlayerDisplayer.mc.currentScreen == null) {
@@ -125,6 +118,7 @@ public class PlayerDisplayer extends Module {
                 }
 
                 if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Hide Friend").getValBoolean()) {
+                    LoadFriends.LoadFile();
                     for (int i = 0; i <= FriendsDatabase.length - 1; i++) {
                         if (entity.getName().equalsIgnoreCase(FriendsDatabase[i].getName())) {
                             d = false;
@@ -155,73 +149,69 @@ public class PlayerDisplayer extends Module {
                 if (d || StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Show Everything").getValBoolean()) {
                     TextRenderer.drawString(f + name + c + g + b, (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble() + (a += 10), 3);
                     if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Ear Rape").getValBoolean()) {
-                        mc.thePlayer.playSound("random.door_open", 1F, 1);
+                        rga = true;
                     }
                     if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send to Webhook").getValBoolean()) {
                         leo2 = true;
                         name3 = entity.getName();
                     }
-                        if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").getValBoolean()) {
-                            leo = true;
-                            name2 = entity.getName();
-                        }
+                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").getValBoolean()) {
+                        leo = true;
+                        name2 = entity.getName();
                     }
-                    TextRenderer.drawString(EnumChatFormatting.DARK_GREEN + "Players (" + a / 10 + "):", (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble(), 3);
                 }
+                TextRenderer.drawString(EnumChatFormatting.DARK_GREEN + "Players (" + a / 10 + "):", (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble(), 3);
             }
         }
+    }
 
-        @SubscribeEvent
-        public void onTick (TickEvent.ClientTickEvent event){
-            if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
-            if (Checking) {
-                if (++timeout >= 200) {
-                    timeout = 0;
-                    Checking = false;
-                }
-            } else {
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
+        if (Checking) {
+            if (++timeout >= 200) {
                 timeout = 0;
+                Checking = false;
             }
-
-            if (leo) {
-                if (tick == 200) {
-                    ChatUtils.sendMessage("/pc FED DETECTED!!! USERNAME: "+ name2);
-                    leo = false;
-                    tick = 0;
-                }
-                tick++;
-            }
-
-            if (leo2) {
-                if (tick2 == 200) {
-                    new Thread(() -> {
-                        try {
-                            String url = "https://discord.com/api/webhooks/997840037242740747/htRxGdFaISSorsIO5ncS931TD4dLQBsQeE8UfwFCjnzbz91t5q2mPKasyK2O9wfxrr6m";
-                            DiscordWebhook web = new DiscordWebhook(url);
-                            web.setContent("<@!222635812389519361>FED DETECTED + USERNAME: `" + name3 + "`");
-                            web.execute();
-                        } catch (IOException k) {
-                            k.printStackTrace();
-                        }
-                    }).start();
-                    leo2 = false;
-                    tick2=0;
-                }
-                tick2++;
-                }
-            }
-
-        @SubscribeEvent
-        public void onWorldChange (WorldEvent.Load event){
-            StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").setValBoolean(false);
-        }
-
-        static {
-            Watchdog = null;
-            Checked = new ArrayList();
-            Checking = false;
+        } else {
             timeout = 0;
         }
 
+        if (leo) {
+            if (mc.thePlayer.ticksExisted % 200 == 0) {
+                ChatUtils.sendMessage("/pc FED DETECTED!!! USERNAME: " + name2);
+                leo = false;
+            }
+        }
 
+        if (leo2) {
+            if (mc.thePlayer.ticksExisted % 200 == 0) {
+                new Thread(() -> {
+                    try {
+                        String url = "https://discord.com/api/webhooks/997840037242740747/htRxGdFaISSorsIO5ncS931TD4dLQBsQeE8UfwFCjnzbz91t5q2mPKasyK2O9wfxrr6m";
+                        DiscordWebhook web = new DiscordWebhook(url);
+                        web.setContent("<@!222635812389519361>FED DETECTED + USERNAME: `" + name3 + "`");
+                        web.execute();
+                    } catch (IOException k) {
+                        k.printStackTrace();
+                    }
+                }).start();
+                leo2 = false;
+            }
+        }
+
+        if (rga) {
+            if (mc.thePlayer.ticksExisted % 2 == 0) {
+                mc.thePlayer.playSound("random.orb", 1, 0.5F);
+                rga = false;
+            }
+        }
     }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").setValBoolean(false);
+    }
+
+
+}
