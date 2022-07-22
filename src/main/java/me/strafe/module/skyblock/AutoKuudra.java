@@ -1,6 +1,7 @@
 package me.strafe.module.skyblock;
 
 import me.strafe.StrafeLegitMod;
+import me.strafe.events.TickEndEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
@@ -12,6 +13,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.StringUtils;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -75,8 +78,8 @@ public class AutoKuudra extends Module {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
+    public void onTick(TickEndEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         if (mc.currentScreen == null && Location.isInKuudra()) {
             if (mountedCannon) {
                 for (Entity entity : mc.theWorld.loadedEntityList) {
@@ -135,6 +138,8 @@ public class AutoKuudra extends Module {
         entity2 = null;
         dead = false;
     }
+
+
 
 
 }
