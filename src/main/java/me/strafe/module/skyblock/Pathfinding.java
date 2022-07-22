@@ -26,7 +26,8 @@ public class Pathfinding {
 
     @SubscribeEvent
     public void onTick(TickEndEvent event) {
-        if(!walk) return;
+        if (mc.thePlayer == null || mc.theWorld == null) return;
+        if (!walk) return;
         if (Pathfinder.hasPath()) {
             if (++stuckTicks >= 20) {
                 curPos = mc.thePlayer.getPosition();
@@ -45,7 +46,7 @@ public class Pathfinding {
             Rotation needed = RotationUtils.getRotation(first);
             needed.setPitch(mc.thePlayer.rotationPitch);
             if (VecUtils.getHorizontalDistance(mc.thePlayer.getPositionVector(), first) < 0.7) {
-                if(mc.thePlayer.getPositionVector().distanceTo(first) > 2) {
+                if (mc.thePlayer.getPositionVector().distanceTo(first) > 2) {
                     if (RotationUtils.done && needed.getYaw() < 135.0f) {
                         RotationUtils.setup(needed, (long) 150);
                     }
@@ -61,8 +62,7 @@ public class Pathfinding {
                     }
                     if (Math.abs(mc.thePlayer.posY - first.yCoord) > 0.5) {
                         KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), mc.thePlayer.posY < first.yCoord);
-                    }
-                    else {
+                    } else {
                         KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
                     }
                 } else {
@@ -80,8 +80,7 @@ public class Pathfinding {
                 mc.thePlayer.setSprinting(true);
                 if (Math.abs(mc.thePlayer.posY - first.yCoord) > 0.5) {
                     KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), mc.thePlayer.posY < first.yCoord);
-                }
-                else {
+                } else {
                     KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
                 }
             }
@@ -90,17 +89,18 @@ public class Pathfinding {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         if (Pathfinder.path != null && !Pathfinder.path.isEmpty()) {
             Vec3 last = Pathfinder.path.get(Pathfinder.path.size() - 1).addVector(0.0, -1.0, 0.0);
-            RenderUtils.drawBlockBox(new BlockPos(last), ColorUtils.getChroma(3000.0f, (int)(last.xCoord + last.yCoord + last.zCoord)), event.partialTicks);
-            if(walk) {
+            RenderUtils.drawBlockBox(new BlockPos(last), ColorUtils.getChroma(3000.0f, (int) (last.xCoord + last.yCoord + last.zCoord)), event.partialTicks);
+            if (walk) {
                 RenderUtils.drawLines(Pathfinder.path, 1, event.partialTicks);
             }
         }
         if (!RotationUtils.done) {
             RotationUtils.update();
         }
-        for(BlockPos blockPos : temp) {
+        for (BlockPos blockPos : temp) {
             RenderUtils.drawBlockBox(blockPos, Color.WHITE, event.partialTicks);
         }
     }
@@ -108,8 +108,8 @@ public class Pathfinding {
     private static Vec3 goodPoints(ArrayList<Vec3> path) {
         ArrayList<Vec3> reversed = new ArrayList<>(path);
         Collections.reverse(reversed);
-        for(Vec3 Vec3 : reversed.stream().filter(Vec3 -> new BlockPos(Vec3).getY() == mc.thePlayer.getPosition().getY()).collect(Collectors.toList())) {
-            if(isGood(Vec3)) {
+        for (Vec3 Vec3 : reversed.stream().filter(Vec3 -> new BlockPos(Vec3).getY() == mc.thePlayer.getPosition().getY()).collect(Collectors.toList())) {
+            if (isGood(Vec3)) {
                 return Vec3;
             }
         }
@@ -118,7 +118,7 @@ public class Pathfinding {
 
 
     private static boolean isGood(Vec3 point) {
-        if(point == null) return false;
+        if (point == null) return false;
         Vec3 topPoint = point.add(new Vec3(0, 2, 0));
 
         Vec3 topPos = mc.thePlayer.getPositionVector().addVector(0, 1, 0);
@@ -130,21 +130,21 @@ public class Pathfinding {
         Vec3 directionTop = RotationUtils.getLook(topPoint);
         directionTop = VecUtils.scaleVec(directionTop, 0.5f);
         for (int i = 0; i < Math.round(topPoint.distanceTo(mc.thePlayer.getPositionEyes(1))) * 2; i++) {
-            if(mc.theWorld.getBlockState(new BlockPos(topPos)).getBlock().getCollisionBoundingBox(
+            if (mc.theWorld.getBlockState(new BlockPos(topPos)).getBlock().getCollisionBoundingBox(
                     mc.theWorld,
                     new BlockPos(topPos),
                     mc.theWorld.getBlockState(new BlockPos(topPos))
             ) != null) return false;
             topPos = topPos.add(directionTop);
 
-            if(mc.theWorld.getBlockState(new BlockPos(botPos)).getBlock().getCollisionBoundingBox(
+            if (mc.theWorld.getBlockState(new BlockPos(botPos)).getBlock().getCollisionBoundingBox(
                     mc.theWorld,
                     new BlockPos(botPos),
                     mc.theWorld.getBlockState(new BlockPos(topPos))
             ) != null) return false;
             botPos = botPos.add(directionTop);
 
-            if(mc.theWorld.getBlockState(new BlockPos(underPos)).getBlock().getCollisionBoundingBox(
+            if (mc.theWorld.getBlockState(new BlockPos(underPos)).getBlock().getCollisionBoundingBox(
                     mc.theWorld,
                     new BlockPos(underPos),
                     mc.theWorld.getBlockState(new BlockPos(topPos))

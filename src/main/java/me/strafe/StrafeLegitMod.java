@@ -1,9 +1,11 @@
 package me.strafe;
 
+import me.strafe.commands.Goto;
 import me.strafe.config.SaveLoad;
 import me.strafe.events.SecondEvent;
 import me.strafe.events.TickEndEvent;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
@@ -33,15 +35,13 @@ public class StrafeLegitMod
     public SaveLoad saveLoad;
     public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
     
-    public void init() throws IOException {
+    public void init() {
     	MinecraftForge.EVENT_BUS.register(this);
     	settingsManager = new SettingsManager();
     	moduleManager = new ModuleManager();
     	clickGui = new ClickGui();
         Display.setTitle("STRAFE LEGIT CLIENT");
         saveLoad = new SaveLoad();
-
-        MinecraftForge.EVENT_BUS.register(new TickEndEvent());
 
         keybinds.add(new KeyBinding("Open Kuudra Shop", Keyboard.KEY_NONE, "RealAutoGG")); //0
 

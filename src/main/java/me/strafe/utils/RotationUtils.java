@@ -56,13 +56,15 @@ public class RotationUtils {
     }
 
     public static void update() {
-        if (System.currentTimeMillis() <= endTime) {
-            RotationUtils.mc.thePlayer.rotationYaw = RotationUtils.interpolate(startRot.getYaw(), endRot.getYaw());
-            RotationUtils.mc.thePlayer.rotationPitch = RotationUtils.interpolate(startRot.getPitch(), endRot.getPitch());
-        } else if (!done) {
-            RotationUtils.mc.thePlayer.rotationYaw = endRot.getYaw();
-            RotationUtils.mc.thePlayer.rotationPitch = endRot.getPitch();
-            RotationUtils.reset();
+        if(mc.thePlayer != null) {
+            if (System.currentTimeMillis() <= endTime) {
+                RotationUtils.mc.thePlayer.rotationYaw = RotationUtils.interpolate(startRot.getYaw(), endRot.getYaw());
+                RotationUtils.mc.thePlayer.rotationPitch = RotationUtils.interpolate(startRot.getPitch(), endRot.getPitch());
+            } else if (!done) {
+                RotationUtils.mc.thePlayer.rotationYaw = endRot.getYaw();
+                RotationUtils.mc.thePlayer.rotationPitch = endRot.getPitch();
+                RotationUtils.reset();
+            }
         }
     }
 
