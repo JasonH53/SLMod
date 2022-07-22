@@ -10,7 +10,6 @@ public class Pathfinder {
     public static ArrayList<Vec3> path;
     public static BlockPos goal;
 
-
     public static void setup(BlockPos from, BlockPos to, double minDistance) {
         pathfinder = new AStarCustomPathfinder(new Vec3(from), new Vec3(to), minDistance);
         pathfinder.compute();

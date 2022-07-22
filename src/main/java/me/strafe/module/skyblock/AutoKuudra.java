@@ -1,6 +1,7 @@
 package me.strafe.module.skyblock;
 
 import me.strafe.StrafeLegitMod;
+import me.strafe.events.TickEndEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
@@ -75,8 +76,8 @@ public class AutoKuudra extends Module {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
+    public void onTick(TickEndEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         if (mc.currentScreen == null && Location.isInKuudra()) {
             if (mountedCannon) {
                 for (Entity entity : mc.theWorld.loadedEntityList) {
@@ -100,12 +101,14 @@ public class AutoKuudra extends Module {
                 if(!Pathfinder.hasPath()) {
                     if (!initWalk) {
                         BlockPos blockPos = cannonPositions[(int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Cannon Number").getValDouble() - 1];
+                        ChatUtils.addChatMessage("started walking to "+blockPos);
                         new Thread(() -> {
                             Pathfinding.initWalk();
                             Pathfinder.setup(new BlockPos(VecUtils.floorVec(mc.thePlayer.getPositionVector())), blockPos, 0.0);
                         }).start();
                         initWalk = true;
                     } else {
+                        ChatUtils.addChatMessage("finished walking now mount");
                         rightClick();
                         mountedCannon = true;
                     }
