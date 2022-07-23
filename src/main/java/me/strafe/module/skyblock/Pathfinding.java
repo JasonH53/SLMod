@@ -26,7 +26,8 @@ public class Pathfinding {
 
     @SubscribeEvent
     public void onTick(TickEndEvent event) {
-        if(!walk) return;
+        if (mc.thePlayer == null || mc.theWorld == null) return;
+        if (!walk) return;
         if (Pathfinder.hasPath()) {
             if (++stuckTicks >= 20) {
                 curPos = mc.thePlayer.getPosition();
@@ -45,7 +46,7 @@ public class Pathfinding {
             Rotation needed = RotationUtils.getRotation(first);
             needed.setPitch(mc.thePlayer.rotationPitch);
             if (VecUtils.getHorizontalDistance(mc.thePlayer.getPositionVector(), first) < 0.7) {
-                if(mc.thePlayer.getPositionVector().distanceTo(first) > 2) {
+                if (mc.thePlayer.getPositionVector().distanceTo(first) > 2) {
                     if (RotationUtils.done && needed.getYaw() < 135.0f) {
                         RotationUtils.setup(needed, (long) 150);
                     }
@@ -90,6 +91,7 @@ public class Pathfinding {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         if (Pathfinder.path != null && !Pathfinder.path.isEmpty()) {
             Vec3 last = Pathfinder.path.get(Pathfinder.path.size() - 1).addVector(0.0, -1.0, 0.0);
             RenderUtils.drawBlockBox(new BlockPos(last), ColorUtils.getChroma(3000.0f, (int)(last.xCoord + last.yCoord + last.zCoord)), event.partialTicks);

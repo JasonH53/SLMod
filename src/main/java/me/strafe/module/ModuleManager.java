@@ -28,6 +28,7 @@ public class ModuleManager {
         this.modules.add(new EntityReach());
         this.modules.add(new AutoBuy());
         this.modules.add(new ChestStealer());
+        this.modules.add(new AutoReady());
     }
 
     public Module getModule(String name) {

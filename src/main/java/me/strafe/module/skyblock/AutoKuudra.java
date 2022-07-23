@@ -8,20 +8,25 @@ import me.strafe.settings.Setting;
 import me.strafe.utils.*;
 import me.strafe.utils.pathfinding.Pathfinder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class AutoKuudra extends Module {
     public static Rotation startRot = null;
@@ -31,13 +36,13 @@ public class AutoKuudra extends Module {
     public static boolean initWalk = false;
 
     private static BlockPos[] cannonPositions = {
-            new BlockPos(-88, 41, -119.5),
-            new BlockPos(-82, 41, -106),
-            new BlockPos( -92, 41, -89.5),
-            new BlockPos(-101, 41, -86.5),
-            new BlockPos(-111, 41, -89.5),
-            new BlockPos(-121, 41, -105.5),
-            new BlockPos(-115, 41, -119),
+            new BlockPos(-89, 41, -120),
+            new BlockPos(-83, 41, -107),
+            new BlockPos(-91, 41, -90),
+            new BlockPos(-101, 41, -87),
+            new BlockPos(-111, 41, -91),
+            new BlockPos(-121, 40, -108),
+            new BlockPos(-113, 41, -119),
     };
 
     public AutoKuudra() {
@@ -56,6 +61,8 @@ public class AutoKuudra extends Module {
         if (mc.thePlayer != null) {
             startRot = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
         }
+        mountedCannon=false;
+        initWalk=false;
     }
 
     public void onDisable() {
@@ -103,12 +110,14 @@ public class AutoKuudra extends Module {
                 if(!Pathfinder.hasPath()) {
                     if (!initWalk) {
                         BlockPos blockPos = cannonPositions[(int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Cannon Number").getValDouble() - 1];
+                        ChatUtils.addVanillaMessage("started walking to "+blockPos);
                         new Thread(() -> {
                             Pathfinding.initWalk();
                             Pathfinder.setup(new BlockPos(VecUtils.floorVec(mc.thePlayer.getPositionVector())), blockPos, 0.0);
                         }).start();
                         initWalk = true;
                     } else {
+                        ChatUtils.addChatMessage("finished walking now mount");
                         rightClick();
                         mountedCannon = true;
                     }
@@ -135,11 +144,8 @@ public class AutoKuudra extends Module {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        entity2 = null;
-        dead = false;
+        mountedCannon=false;
+        initWalk=false;
     }
-
-
-
 
 }
