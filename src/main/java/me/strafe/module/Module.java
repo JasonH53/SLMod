@@ -1,15 +1,10 @@
 package me.strafe.module;
 
-import com.google.gson.JsonObject;
-import me.strafe.StrafeLegitMod;
-import me.strafe.config.SaveLoad;
-import me.strafe.settings.Setting;
+import me.strafe.SLM;
 import me.strafe.utils.ChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.io.IOException;
 
 public class Module {
 
@@ -45,8 +40,8 @@ public class Module {
 
 	public void setKey(int key) {
 		this.key = key;
-		if (StrafeLegitMod.instance.saveLoad != null) {
-			StrafeLegitMod.instance.saveLoad.save();
+		if (SLM.instance.saveLoad != null) {
+			SLM.instance.saveLoad.save();
 		}
 	}
 
@@ -72,14 +67,14 @@ public class Module {
 		} else {
 			this.onDisable();
 		}
-		if (StrafeLegitMod.instance.saveLoad != null) {
-			StrafeLegitMod.instance.saveLoad.save();
+		if (SLM.instance.saveLoad != null) {
+			SLM.instance.saveLoad.save();
 		}
 	}
 	
 	public void onEnable() {
 		MinecraftForge.EVENT_BUS.register(this);
-		if (mc.thePlayer!= null && messagetoggle) {
+		if (mc.thePlayer!= null && messagetoggle && mc.theWorld!=null) {
 			ChatUtils.addChatMessage(EnumChatFormatting.DARK_RED + this.name + EnumChatFormatting.WHITE + " is toggled "+ EnumChatFormatting.GREEN + "ON" + EnumChatFormatting.WHITE + ".");
 		}
 	}

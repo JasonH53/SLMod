@@ -1,6 +1,5 @@
 package me.strafe.module.skyblock;
 
-import me.strafe.StrafeLegitMod;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import net.minecraft.block.Block;
@@ -27,14 +26,16 @@ public class GhostBlock extends Module {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
-        if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-            if (GhostBlock.mc.currentScreen == null) {
-                if (mc.objectMouseOver.getBlockPos() == null) {
-                    return;
-                }
-                Block block = mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock();
-                if (!interactables.contains(block)) {
-                    mc.theWorld.setBlockToAir(mc.objectMouseOver.getBlockPos());
+        if (this.getKey() != 0) {
+            if (Keyboard.isKeyDown(this.getKey())) {
+                if (GhostBlock.mc.currentScreen == null) {
+                    if (mc.objectMouseOver.getBlockPos() == null) {
+                        return;
+                    }
+                    Block block = mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock();
+                    if (!interactables.contains(block)) {
+                        mc.theWorld.setBlockToAir(mc.objectMouseOver.getBlockPos());
+                    }
                 }
             }
         }

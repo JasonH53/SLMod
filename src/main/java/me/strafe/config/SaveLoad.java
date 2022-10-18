@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.module.Module;
-import me.strafe.module.skyblock.AntiAfk;
 import me.strafe.settings.Setting;
 import net.minecraft.client.Minecraft;
 
@@ -37,11 +36,11 @@ public class SaveLoad {
     public void save() {
         ArrayList<String> toSave = new ArrayList<String>();
 
-        for (Module mod : StrafeLegitMod.instance.moduleManager.modules) {
+        for (Module mod : SLM.instance.moduleManager.modules) {
             toSave.add("MOD:" + mod.getName() + ":" + mod.isToggled() + ":" + mod.getKey());
         }
 
-        for (Setting set : StrafeLegitMod.instance.settingsManager.getSettings()) {
+        for (Setting set : SLM.instance.settingsManager.getSettings()) {
             if (set.isCheck()) {
                 toSave.add("SET:" + set.getName() + ":" + set.getParentMod().getName() + ":" + set.getValBoolean());
             }
@@ -82,7 +81,7 @@ public class SaveLoad {
         for (String s : lines) {
             String[] args = s.split(":");
             if (s.toLowerCase().startsWith("mod:")) {
-                Module m = StrafeLegitMod.instance.moduleManager.getModule(args[1]);
+                Module m = SLM.instance.moduleManager.getModule(args[1]);
                 if (m != null) {
                     if (!m.getName().equalsIgnoreCase("TrophyFish AntiAFK")) {
                         m.setToggled(Boolean.parseBoolean(args[2]));
@@ -90,9 +89,9 @@ public class SaveLoad {
                     m.setKey(Integer.parseInt(args[3]));
                 }
             } else if (s.toLowerCase().startsWith("set:")) {
-                Module m = StrafeLegitMod.instance.moduleManager.getModule(args[2]);
+                Module m = SLM.instance.moduleManager.getModule(args[2]);
                 if (m != null) {
-                    Setting set = StrafeLegitMod.instance.settingsManager.getSettingByName(m, args[1]);
+                    Setting set = SLM.instance.settingsManager.getSettingByName(m, args[1]);
                     if (set != null) {
                         if (set.isCheck()) {
                             set.setValBoolean(Boolean.parseBoolean(args[3]));

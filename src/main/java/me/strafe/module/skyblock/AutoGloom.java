@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
@@ -26,7 +26,7 @@ public class AutoGloom extends Module {
 
     public AutoGloom() {
         super("Auto Gloom", "Uses Gloomlock", Category.SKYBLOCK);
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Mana", this, 150, 0, 2000, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Mana", this, 150, 0, 2000, false));
     }
 
     @SubscribeEvent
@@ -46,7 +46,7 @@ public class AutoGloom extends Module {
             if (mc.currentScreen != null) {
                 return;
             }
-            if ((double)Total < StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Mana").getValDouble() && !onUse) {
+            if ((double)Total < SLM.instance.settingsManager.getSettingByName(this, "Mana").getValDouble() && !onUse) {
                 new Thread(() -> {
                     for (int i = 0; i <= 8; ++i) {
                         onUse = true;

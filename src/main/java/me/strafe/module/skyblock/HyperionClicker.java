@@ -1,6 +1,7 @@
 package me.strafe.module.skyblock;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
+import me.strafe.events.TickEndEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
@@ -23,15 +24,15 @@ public class HyperionClicker extends Module {
 
     public HyperionClicker() {
         super("Hyperion Clicker", "auto right clicks", Category.SKYBLOCK);
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("MinCPS", this, 20, 1, 60, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("MaxCPS", this, 30, 1, 60, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Left/Right", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("MinCPS", this, 20, 1, 60, false));
+        SLM.instance.settingsManager.rSetting(new Setting("MaxCPS", this, 30, 1, 60, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Left/Right", this, false));
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.RenderTickEvent e) {
-        if (e.phase == TickEvent.Phase.END || mc.thePlayer == null || mc.theWorld == null) return;
-        if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Left/Right").getValBoolean() == false) {
+    public void onTick(TickEndEvent e) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
+        if (!SLM.instance.settingsManager.getSettingByName(this, "Left/Right").getValBoolean()) {
             if (Mouse.isButtonDown(0)) {
                 if (System.currentTimeMillis() - LastClick > speed * 1000) {
                     LastClick = System.currentTimeMillis();
@@ -45,9 +46,8 @@ public class HyperionClicker extends Module {
                     KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
                     this.updateVals();
                 }
-
             }
-        } else if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Left/Right").getValBoolean() == true) {
+        } else if (SLM.instance.settingsManager.getSettingByName(this, "Left/Right").getValBoolean()) {
             if (Mouse.isButtonDown(1)) {
                 if (System.currentTimeMillis() - LastClick > speed * 1000) {
                     LastClick = System.currentTimeMillis();
@@ -66,8 +66,8 @@ public class HyperionClicker extends Module {
     }
 
     private void updateVals() {
-        min = StrafeLegitMod.instance.settingsManager.getSettingByName(this, "MinCPS").getValDouble();
-        max = StrafeLegitMod.instance.settingsManager.getSettingByName(this, "MaxCPS").getValDouble();
+        min = SLM.instance.settingsManager.getSettingByName(this, "MinCPS").getValDouble();
+        max = SLM.instance.settingsManager.getSettingByName(this, "MaxCPS").getValDouble();
 
         if (min >= max) {
             max = min + 1;

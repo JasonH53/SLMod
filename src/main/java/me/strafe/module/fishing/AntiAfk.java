@@ -1,14 +1,10 @@
-package me.strafe.module.skyblock;
+package me.strafe.module.fishing;
 
-import me.strafe.StrafeLegitMod;
-import me.strafe.config.SaveLoad;
+import me.strafe.SLM;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
 import me.strafe.utils.*;
-import net.minecraft.client.gui.GuiChat;
-
-import net.minecraft.util.Vec3;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -18,11 +14,10 @@ public class AntiAfk extends Module {
     private static int ticks = 0;
     public static Rotation startRot = null;
     private AAState aaState = AAState.AWAY;
-//    private static Location currentLocation = null;
 
     public AntiAfk() {
-        super("TrophyFish AntiAFK", "moves your mouse", Category.SKYBLOCK);
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Disable on swap", this, false));
+        super("TrophyFish AntiAFK", "moves your mouse", Category.FISHING);
+        SLM.instance.settingsManager.rSetting(new Setting("Disable on swap", this, false));
     }
 
     public void onEnable() {
@@ -81,8 +76,8 @@ public class AntiAfk extends Module {
     @SubscribeEvent
     public void onWorldChange (WorldEvent.Load event){
             this.toggle();
-        if (StrafeLegitMod.instance.saveLoad != null) {
-            StrafeLegitMod.instance.saveLoad.save();
+        if (SLM.instance.saveLoad != null) {
+            SLM.instance.saveLoad.save();
         }
     }
 

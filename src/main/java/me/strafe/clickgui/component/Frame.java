@@ -2,7 +2,7 @@ package me.strafe.clickgui.component;
 
 import java.util.ArrayList;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import org.lwjgl.opengl.GL11;
 
 import me.strafe.clickgui.ClickGui;
@@ -48,7 +48,7 @@ public class Frame {
 		 * 		}
 		 */
 		
-		for(Module mod : StrafeLegitMod.instance.moduleManager.getModulesInCategory(category)) {
+		for(Module mod : SLM.instance.moduleManager.getModulesInCategory(category)) {
 			Button modButton = new Button(mod, this, tY);
 			this.components.add(modButton);
 			tY += 12;
