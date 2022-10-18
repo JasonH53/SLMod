@@ -46,12 +46,10 @@ public class ModuleManager {
         this.modules.add(new GhostAimbot());
         this.modules.add(new AutoSalvage());
         this.modules.add(new HorsemanAOTD());
-        this.modules.add(new RevTrade());
         this.modules.add(new DojoAddons());
         this.modules.add(new JerryBoxes());
         this.modules.add(new PeltsHelper());
         this.modules.add(new HarpSolver());
-        this.modules.add(new NotDupe());
 
         //Kuudra
         this.modules.add(new AutoKuudra());
@@ -62,7 +60,6 @@ public class ModuleManager {
         this.modules.add(new AutoChest());
 
         //Fishing
-//        this.modules.add(new RodSwapper());
         this.modules.add(new AntiAfk());
         this.modules.add(new SlugFishAutoFish());
         this.modules.add(new ThunderAura());
