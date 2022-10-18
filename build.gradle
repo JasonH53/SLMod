@@ -1,90 +1,102 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "https://maven.minecraftforge.net/"
-        }
-        maven {
-            name = "jitpack"
-            url = "https://jitpack.io/"
-        }
-        maven {
-            url = "https://repo.spongepowered.org/maven"
-        }
-    }
-    dependencies {
-        classpath "com.github.asbyth:ForgeGradle:6f53277"
-        classpath "com.github.xcfrg:MixinGradle:0.6-SNAPSHOT"
-    }
+plugins {
+    id 'net.minecraftforge.gradle.forge' version 'FG_2.1-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'org.spongepowered.mixin' version '0.6-SNAPSHOT'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: "org.spongepowered.mixin"
-
 
 version = "1.0"
-group= "com.strafe.autogg" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "me.strafe.autogg"
 archivesBaseName = "autogg"
-compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
 
-minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
-    runDir = "run"
-    mappings = "stable_20"
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://repo.spongepowered.org/maven"
-    }
+    maven { url 'https://jitpack.io/' }
+    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url "https://repo.sk1er.club/repository/maven-public" }
+    maven { url "https://repo.sk1er.club/repository/maven-releases/" }
+}
+
+minecraft {
+    version = '1.8.9-11.15.1.2318-1.8.9'
+    runDir = 'run'
+    mappings = 'stable_22'
+    makeObfSourceJar = false
+    replace '@VERSION@': project.version
+    clientRunArgs += ["--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker" , "--mixin mixins.cheeto.json"]
+}
+
+configurations {
+    packageLib
+    configurations.implementation.extendsFrom(configurations.packageLib)
 }
 
 dependencies {
-    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        exclude module: "launchwrapper"
-        exclude module: "guava"
-        exclude module: "commons-io"
-        exclude module: "gson"
+    compile group: 'net.java.dev.jna', name: 'platform', version: '3.5.2'
+    packageLib("gg.essential:loader-launchwrapper:1.1.3")
+    implementation("gg.essential:essential-1.8.9-forge:2581")
+    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    implementation('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        transitive = false
     }
-    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-
-    compileOnly 'org.jetbrains:annotations:16.0.2'
+    implementation 'net.java.dev.jna:jna:5.12.1'
 }
 
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+mixin {
+    disableRefMapWarning = true
+    defaultObfuscationEnv searge
+    add sourceSets.main, 'mixins.STRAFE.refmap.json'
+}
 
-    // replace stuff in mcmod.info, nothing else
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest.attributes(
+            'FMLCorePluginContainsFMLMod': true,
+            "FMLCorePlugin": "me.strafe.Mixins.MixinLoader",
+            'ForceLoadAsMod': true,
+            'MixinConfigs': 'mixins.STRAFE.json',
+            'ModSide': 'CLIENT',
+            'TweakClass': 'gg.essential.loader.stage0.EssentialSetupTweaker',
+            'TweakOrder': '0'
+    )
+
+    enabled = false
+}
+
+shadowJar {
+    archiveFileName = jar.archiveFileName
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    configurations = [project.configurations.packageLib]
+}
+
+reobf {
+    shadowJar {
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
-    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
 
-//jar {
-//    manifest.attributes(
-//            'TweakClass': "org.spongepowered.asm.launch.MixinTweaker",
-//            'MixinConfigs': 'mixins.STRAFE.json',
-//            'ForceLoadAsMod': "true",
-//            'FMLCorePluginContainsFMLMod': 'true',
-//    )
-//}
-//
-//mixin {
-//    disableRefMapWarning = true
-//    defaultObfuscationEnv searge
-//    add sourceSets.main, "mixins.STRAFE.refmap.json"
-//}
+sourceSets {
+    main { output.resourcesDir = java.outputDir }
+}
 
+tasks.reobfJar.dependsOn(shadowJar)

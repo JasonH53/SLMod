@@ -1,24 +1,23 @@
 package me.strafe.module.render;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.config.LoadFriends;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
 import me.strafe.utils.ChatUtils;
-import me.strafe.utils.DiscordWebhook;
 import me.strafe.utils.Utils;
 import me.strafe.utils.handlers.TextRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.StringUtils;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.io.IOException;
-import java.util.ArrayList;
 
 import static me.strafe.utils.Registers.Registers.*;
 
@@ -26,7 +25,6 @@ public class PlayerDisplayer extends Module {
 
     public boolean active;
     public static String Watchdog;
-    public static ArrayList<String> Checked;
     public static boolean Checking;
     public static int timeout;
     public static String name2;
@@ -37,18 +35,18 @@ public class PlayerDisplayer extends Module {
 
     public PlayerDisplayer() {
         super("FED Detector", "Shows Players", Category.RENDER);
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Hide Friend", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Hide Invisible", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Hide NPC", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Hide Watchdog", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Show Distance", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Show Everything", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Ear Rape", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send to Webhook", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Send Fed to party chat", this, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Distance", this, 40, 0, 60, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 900, false));
-        StrafeLegitMod.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 450, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Hide Friend", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Hide Invisible", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Hide NPC", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Hide Watchdog", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Show Distance", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Show Everything", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Ear Rape", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Send to Webhook", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Send Fed to party chat", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Distance", this, 40, 0, 60, false));
+        SLM.instance.settingsManager.rSetting(new Setting("X Location", this, 50, 0, 900, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Y Location", this, 50, 0, 450, false));
     }
 
     @Override
@@ -78,10 +76,10 @@ public class PlayerDisplayer extends Module {
         if (!active) {
             return;
         }
-        if (PlayerDisplayer.mc.currentScreen == null) {
+        if (mc.currentScreen == null) {
             int a = 0;
             for (Entity entity : PlayerDisplayer.mc.theWorld.getLoadedEntityList()) {
-                if (!(entity instanceof EntityPlayer) || !((double) entity.getDistanceToEntity(PlayerDisplayer.mc.thePlayer) < StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Distance").getValDouble()
+                if (!(entity instanceof EntityPlayer) || !((double) entity.getDistanceToEntity(PlayerDisplayer.mc.thePlayer) < SLM.instance.settingsManager.getSettingByName(this, "Distance").getValDouble()
                         || entity.getName().equals(PlayerDisplayer.mc.thePlayer.getName()))) {
                     continue;
                 }
@@ -98,7 +96,7 @@ public class PlayerDisplayer extends Module {
                     d = false;
                 }
 
-                if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Hide NPC").getValBoolean()) {
+                if (SLM.instance.settingsManager.getSettingByName(this, "Hide NPC").getValBoolean()) {
                     if (entity.getName().equalsIgnoreCase("taurus") || entity.getName().equalsIgnoreCase("BarbarianGuard")) {
                         d = false;
                         break;
@@ -112,12 +110,12 @@ public class PlayerDisplayer extends Module {
                     name = EnumChatFormatting.DARK_GRAY + name;
                     c = EnumChatFormatting.DARK_GRAY + " (Bot)";
                     other = false;
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Hide NPC").getValBoolean()) {
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Hide NPC").getValBoolean()) {
                         d = false;
                     }
                 }
 
-                if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Hide Friend").getValBoolean()) {
+                if (SLM.instance.settingsManager.getSettingByName(this, "Hide Friend").getValBoolean()) {
                     LoadFriends.LoadFile();
                     for (int i = 0; i <= FriendsDatabase.length - 1; i++) {
                         if (entity.getName().equalsIgnoreCase(FriendsDatabase[i].getName())) {
@@ -130,37 +128,37 @@ public class PlayerDisplayer extends Module {
                 if (entity.isInvisible()) {
                     name = EnumChatFormatting.GRAY + name;
                     g = EnumChatFormatting.GRAY + " (Invisible)";
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Show Distance").getValBoolean()) {
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Show Distance").getValBoolean()) {
                         d = false;
                     }
                 }
                 if (entity.getName().equals(Watchdog)) {
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Hide Watchdog").getValBoolean()) {
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Hide Watchdog").getValBoolean()) {
                         d = false;
                     }
                 }
 
                 String b;
-                if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Show Distance").getValBoolean()) {
+                if (SLM.instance.settingsManager.getSettingByName(this, "Show Distance").getValBoolean()) {
                     b = EnumChatFormatting.GREEN + " [" + Math.round(entity.getDistanceToEntity(PlayerDisplayer.mc.thePlayer)) + "m]";
                 } else {
                     b = "";
                 }
-                if (d || StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Show Everything").getValBoolean()) {
-                    TextRenderer.drawString(f + name + c + g + b, (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble() + (a += 10), 3);
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Ear Rape").getValBoolean()) {
+                if (d || SLM.instance.settingsManager.getSettingByName(this, "Show Everything").getValBoolean()) {
+                    TextRenderer.drawString(f + name + c + g + b, (int) SLM.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) SLM.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble() + (a += 10), 3);
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Ear Rape").getValBoolean()) {
                         rga = true;
                     }
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send to Webhook").getValBoolean()) {
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Send to Webhook").getValBoolean()) {
                         leo2 = true;
                         name3 = entity.getName();
                     }
-                    if (StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").getValBoolean()) {
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").getValBoolean()) {
                         leo = true;
                         name2 = entity.getName();
                     }
                 }
-                TextRenderer.drawString(EnumChatFormatting.DARK_GREEN + "Players (" + a / 10 + "):", (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble(), 3);
+                TextRenderer.drawString(EnumChatFormatting.DARK_GREEN + "Players (" + a / 10 + "):", (int) SLM.instance.settingsManager.getSettingByName(this, "X Location").getValDouble(), (int) SLM.instance.settingsManager.getSettingByName(this, "Y Location").getValDouble(), 3);
             }
         }
     }
@@ -186,16 +184,7 @@ public class PlayerDisplayer extends Module {
 
         if (leo2) {
             if (mc.thePlayer.ticksExisted % 200 == 0) {
-                new Thread(() -> {
-                    try {
-                        String url = "https://discord.com/api/webhooks/997840037242740747/htRxGdFaISSorsIO5ncS931TD4dLQBsQeE8UfwFCjnzbz91t5q2mPKasyK2O9wfxrr6m";
-                        DiscordWebhook web = new DiscordWebhook(url);
-                        web.setContent("<@!222635812389519361>FED DETECTED + USERNAME: `" + name3 + "`");
-                        web.execute();
-                    } catch (IOException k) {
-                        k.printStackTrace();
-                    }
-                }).start();
+                //used to be fed webhook
                 leo2 = false;
             }
         }
@@ -210,7 +199,7 @@ public class PlayerDisplayer extends Module {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        StrafeLegitMod.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").setValBoolean(false);
+        SLM.instance.settingsManager.getSettingByName(this, "Send Fed to party chat").setValBoolean(false);
     }
 
 

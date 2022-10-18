@@ -1,35 +1,27 @@
-package me.strafe.module.render;
+package me.strafe.module.kuudra;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.utils.ChatUtils;
 import me.strafe.utils.Location;
-import me.strafe.utils.Stolenutils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 
-import static me.strafe.utils.Utils.mc;
 
 public class EntityReach extends Module {
 
 
     public EntityReach() {
-        super("Kuudra Shop Opener", "entity reach thing", Category.RENDER);
+        super("Kuudra Shop Opener", "entity reach thing", Category.KUUDRA);
     }
 
     @Override
@@ -38,12 +30,13 @@ public class EntityReach extends Module {
     }
 
     @SubscribeEvent
-    public void onKey(InputEvent.KeyInputEvent event) {
+    public void onKey(InputEvent.KeyInputEvent event) throws Exception {
         if (!Location.isInKuudra()) return;
-        if (!StrafeLegitMod.keybinds.get(0).isPressed()) return;
+        if (!SLM.keybinds.get(0).isPressed()) return;
         for (Entity entity : getAllEntitiesInRange()) {
             if (entity.posX == -101.5 && entity.posY == 41.53125 && entity.posZ == -94.5) {
                 interactWithEntity(entity);
+                ChatUtils.addChatMessage("Kuudra Shop opened");
             }
         }
     }

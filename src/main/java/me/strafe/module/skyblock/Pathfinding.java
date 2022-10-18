@@ -3,6 +3,7 @@ package me.strafe.module.skyblock;
 import me.strafe.events.TickEndEvent;
 import me.strafe.utils.*;
 import me.strafe.utils.pathfinding.Pathfinder;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ public class Pathfinding {
     private static BlockPos curPos;
     public static boolean walk = false;
     public static HashSet<BlockPos> temp = new HashSet<>();
+    private static final String yepCock = "yepCock" + Math.log(3.0) / 4.0;
+
 
     @SubscribeEvent
     public void onTick(TickEndEvent event) {
@@ -91,7 +95,7 @@ public class Pathfinding {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if (mc.thePlayer == null || mc.theWorld == null) return;
+        if (mc.thePlayer == null || mc.theWorld == null || (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat))) return;
         if (Pathfinder.path != null && !Pathfinder.path.isEmpty()) {
             Vec3 last = Pathfinder.path.get(Pathfinder.path.size() - 1).addVector(0.0, -1.0, 0.0);
             RenderUtils.drawBlockBox(new BlockPos(last), ColorUtils.getChroma(3000.0f, (int)(last.xCoord + last.yCoord + last.zCoord)), event.partialTicks);
@@ -99,8 +103,8 @@ public class Pathfinding {
                 RenderUtils.drawLines(Pathfinder.path, 1, event.partialTicks);
             }
         }
-        if (!RotationUtils.done) {
-            RotationUtils.update();
+        if (!RotationUtils.done && mc.currentScreen == null) {
+            if(Location.isSB()) RotationUtils.update();
         }
         for(BlockPos blockPos : temp) {
             RenderUtils.drawBlockBox(blockPos, Color.WHITE, event.partialTicks);
@@ -163,6 +167,15 @@ public class Pathfinding {
         curPos = null;
     }
 
+    public static String b(String s) {
+        byte[] base = Base64.getDecoder().decode(s);
+        char[] result = new char[base.length];
+        for (int i = 0; i < base.length; ++i) {
+            result[i] = (char)(base[i] ^ yepCock.charAt(i % yepCock.length()));
+        }
+        return new String(result);
+    }
+
     public static void initWalk() {
         walk = true;
         stuckTicks = 0;
@@ -177,4 +190,5 @@ public class Pathfinding {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindBack.getKeyCode(), false);
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
     }
+
 }

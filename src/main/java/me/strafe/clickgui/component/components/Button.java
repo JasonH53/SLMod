@@ -3,9 +3,9 @@ package me.strafe.clickgui.component.components;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import me.strafe.SLM;
 import org.lwjgl.opengl.GL11;
 
-import me.strafe.StrafeLegitMod;
 import me.strafe.clickgui.ClickGui;
 import me.strafe.clickgui.component.Component;
 import me.strafe.clickgui.component.Frame;
@@ -37,8 +37,8 @@ public class Button extends Component {
 		this.open = false;
 		height = 12;
 		int opY = offset + 12;
-		if(StrafeLegitMod.instance.settingsManager.getSettingsByMod(mod) != null) {
-			for(Setting s : StrafeLegitMod.instance.settingsManager.getSettingsByMod(mod)){
+		if(SLM.instance.settingsManager.getSettingsByMod(mod) != null) {
+			for(Setting s : SLM.instance.settingsManager.getSettingsByMod(mod)){
 				if(s.isCombo()){
 					this.subcomponents.add(new ModeButton(s, this, mod, opY));
 					opY += 12;

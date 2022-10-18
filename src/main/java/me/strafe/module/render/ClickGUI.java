@@ -1,8 +1,8 @@
 package me.strafe.module.render;
 
+import me.strafe.SLM;
 import org.lwjgl.input.Keyboard;
 
-import me.strafe.StrafeLegitMod;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 
@@ -16,7 +16,7 @@ public class ClickGUI extends Module {
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		mc.displayGuiScreen(StrafeLegitMod.instance.clickGui);
+		mc.displayGuiScreen(SLM.instance.clickGui);
 		this.setToggled(false);
 	}
 }

@@ -175,7 +175,6 @@ public class AStarCustomPathfinder {
         }
         if (existingHub == null) {
             if ((loc.xCoord == endVec3.xCoord && loc.yCoord == endVec3.yCoord && loc.zCoord == endVec3.zCoord) || (minDistanceSquared != 0.0 && loc.squareDistanceTo(endVec3) <= minDistanceSquared)) {
-                ChatUtils.addChatMessage("finished at "+loc);
                 path.clear();
                 (path = parent.getPath()).add(loc);
                 return true;

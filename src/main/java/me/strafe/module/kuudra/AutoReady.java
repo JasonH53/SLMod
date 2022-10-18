@@ -1,67 +1,57 @@
-package me.strafe.module.skyblock;
+package me.strafe.module.kuudra;
 
+import me.strafe.events.SecondEvent;
+import me.strafe.events.TickEndEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
-import me.strafe.module.render.EntityReach;
+import me.strafe.module.skyblock.Pathfinding;
+import me.strafe.utils.ChatUtils;
 import me.strafe.utils.Location;
-import net.minecraft.client.entity.EntityPlayerSP;
+import me.strafe.utils.VecUtils;
+import me.strafe.utils.pathfinding.Pathfinder;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AutoReady extends Module {
 
-    boolean startKuudra = false;
-    boolean checkingEntities = false;
+    private static boolean startKuudra = false;
     static int windowId;
     private static boolean readied = false;
+    private static boolean closeGUI = false;
+    private static int debounce = 1;
+    private static final BlockPos bp = new BlockPos(-101, 41, -181);
+    private static boolean finishedWalking = false;
 
     public AutoReady() {
-        super("Auto Ready", "Ready automatically in Kuudra", Category.SKYBLOCK);
+        super("Auto Ready", "Ready automatically in Kuudra", Category.KUUDRA);
     }
 
     @SubscribeEvent
-    public void renderWorld(RenderWorldLastEvent event) {
-        if (!startKuudra || checkingEntities) return;
+    public void onTick(TickEndEvent event) {
+        if (!Location.isInKuudra()) return;
+        if (startKuudra) return;
         new Thread(() -> {
-            try {
-                checkingEntities = true;
-                Thread.sleep(500);
-                Entity elle = null;
-                for (Entity entity1 : (mc.theWorld.loadedEntityList)) {
-                    if (entity1.getName().contains("Elle")) {
-                        elle = entity1;
-                        interactWithEntity(elle);
-                        startKuudra = false;
-                        break;
-                    }
-                }
-                checkingEntities = false;
-            } catch (Exception e) {}
+            Pathfinding.initWalk();
+            Pathfinder.setup(new BlockPos(VecUtils.floorVec(mc.thePlayer.getPositionVector())), bp, 0.0);
         }).start();
-    }
-
-    @SubscribeEvent
-    public void chat(ClientChatReceivedEvent event) {
-        String message = StringUtils.stripControlCodes(event.message.getUnformattedText()).toLowerCase();
-        if (message.contains("[NPC] Elle: Talk to me to begin!")) {
-            startKuudra = true;
+        for (Entity entity1 : (mc.theWorld.loadedEntityList)) {
+            if (entity1.posX == -101.5 && entity1.posY == 40.75 && entity1.posZ == -179.5 && entity1.getDistanceToEntity(mc.thePlayer) <= 2) {
+                ChatUtils.addChatMessage("Attempting to open Elle");
+                interactWithEntity(entity1);
+                startKuudra = true;
+                break;
+            }
         }
     }
 
@@ -79,8 +69,10 @@ public class AutoReady extends Module {
                         if (!invSlots.get(i).getHasStack()) continue;
                         String slotName = StringUtils.stripControlCodes(invSlots.get(i).getStack().getDisplayName());
                         if (slotName.equals("Not Ready")) {
+                            ChatUtils.addChatMessage("Attempting to ready up");
                             clickSlot(invSlots.get(i));
                             readied = true;
+                            closeGUI = true;
                         }
                     }
                 }
@@ -89,8 +81,25 @@ public class AutoReady extends Module {
     }
 
     @SubscribeEvent
+    public void onSecond(SecondEvent event) {
+        if (mc.thePlayer==null) return;
+        if (closeGUI) {
+            if (debounce == 0) {
+                mc.thePlayer.closeScreen();
+                AutoKuudra.startKuudra();
+                debounce = 1;
+                closeGUI = false;
+            }
+            debounce--;
+        }
+    }
+
+    @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         readied = false;
+        startKuudra = false;
+        closeGUI = false;
+        finishedWalking = false;
     }
 
     private void clickSlot(Slot slot) {
@@ -103,17 +112,5 @@ public class AutoReady extends Module {
         playerControllerMP.interactWithEntitySendPacket(mc.thePlayer, entity);
     }
 
-    private static ArrayList<Entity> getAllEntitiesInRange() {
-        if (mc.theWorld!=null) {
-            ArrayList<Entity> entities = new ArrayList<>();
-            for (Entity entity1 : (mc.theWorld.loadedEntityList)) {
-                if (!(entity1 instanceof EntityItem) && !(entity1 instanceof EntityXPOrb) && !(entity1 instanceof EntityWither) && !(entity1 instanceof EntityPlayerSP)) {
-                    entities.add(entity1);
-                }
-            }
-            return entities;
-        }
-        return null;
-    }
 
 }

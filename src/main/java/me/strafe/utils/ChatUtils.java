@@ -9,9 +9,10 @@ public class ChatUtils {
     public static boolean PlayerWhitelisted;
     public static boolean ContainSelf;
     public static boolean CancelMessage;
+    private static final String prefix = EnumChatFormatting.BLUE + "[" + EnumChatFormatting.LIGHT_PURPLE + "STRAFE" + EnumChatFormatting.BLUE + "]" + EnumChatFormatting.WHITE;
 
     public static void addChatMessage(Object Message) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE + "[STRAFE] " + Message.toString().replace("&", "§")));
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(prefix + " " + Message));
     }
 
     public static void addMessageWithoutPrefix(String Message) {

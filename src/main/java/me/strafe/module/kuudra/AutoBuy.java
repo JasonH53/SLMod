@@ -1,9 +1,9 @@
-package me.strafe.module.skyblock;
+package me.strafe.module.kuudra;
 
 import me.strafe.events.SecondEvent;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
-import me.strafe.module.render.EntityReach;
+import me.strafe.utils.ChatUtils;
 import me.strafe.utils.Location;
 import me.strafe.utils.handlers.ScoreboardHandler;
 import net.minecraft.util.StringUtils;
@@ -21,7 +21,7 @@ public class AutoBuy extends Module {
     private static int debounce = 60;
 
     public AutoBuy() {
-        super("Auto Buy", "Auto Buy from shop", Category.SKYBLOCK);
+        super("Auto Buy", "Auto Buy from shop", Category.KUUDRA);
     }
 
     public void onEnable() {
@@ -37,9 +37,11 @@ public class AutoBuy extends Module {
                     EntityReach.openShop();
                 } else {
                     if (Multi40) {
+                        ChatUtils.addChatMessage("Attempting to buy Multi Shot 2");
                         mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, 6, 0, 0, mc.thePlayer);
                         Multi40 = false;
                     } else {
+                        ChatUtils.addChatMessage("Attempting to buy Bonus Damage 2");
                         mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, 3, 0, 0, mc.thePlayer);
                         Bonus40 = false;
                     }
@@ -54,9 +56,11 @@ public class AutoBuy extends Module {
                         EntityReach.openShop();
                     } else {
                         if (Multi80) {
+                            ChatUtils.addChatMessage("Attempting to buy Multi Shot 3");
                             mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, 6, 0, 0, mc.thePlayer);
                             Multi80 = false;
                         } else {
+                            ChatUtils.addChatMessage("Attempting to buy Bonus Damage 3");
                             mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, 3, 0, 0, mc.thePlayer);
                             Bonus80 = false;
                         }

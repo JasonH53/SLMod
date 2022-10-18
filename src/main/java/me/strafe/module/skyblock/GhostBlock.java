@@ -1,6 +1,5 @@
 package me.strafe.module.skyblock;
 
-import me.strafe.StrafeLegitMod;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import net.minecraft.block.Block;

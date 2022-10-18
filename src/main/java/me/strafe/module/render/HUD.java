@@ -1,6 +1,6 @@
 package me.strafe.module.render;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.module.Category;
 import me.strafe.module.Module;
 import net.minecraft.client.Minecraft;
@@ -25,7 +25,7 @@ public class HUD extends Module {
 
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         int y=2;
-        for (Module modules: StrafeLegitMod.instance.moduleManager.getModuleList()) {
+        for (Module modules: SLM.instance.moduleManager.getModuleList()) {
             if (!modules.getName().equalsIgnoreCase("HUD") && modules.isToggled() && modules.visible) {
                 FontRenderer fr = mc.fontRendererObj;
                 fr.drawString(modules.getName(),sr.getScaledWidth()- fr.getStringWidth(modules.getName()) - 1, y, 0xFFFFFF);

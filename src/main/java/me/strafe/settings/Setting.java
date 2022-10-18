@@ -2,16 +2,9 @@ package me.strafe.settings;
 
 import java.util.ArrayList;
 
-import me.strafe.StrafeLegitMod;
+import me.strafe.SLM;
 import me.strafe.module.Module;
 
-/**
- *  Made by HeroCode
- *  it's free to use
- *  but you have to credit him
- *
- *  @author HeroCode
- */
 public class Setting {
 	
 	private String name;
@@ -68,8 +61,8 @@ public class Setting {
 	
 	public void setValString(String in){
 		this.sval = in;
-		if (StrafeLegitMod.instance.saveLoad != null) {
-			StrafeLegitMod.instance.saveLoad.save();
+		if (SLM.instance.saveLoad != null) {
+			SLM.instance.saveLoad.save();
 		}
 	}
 	
@@ -83,8 +76,8 @@ public class Setting {
 	
 	public void setValBoolean(boolean in){
 		this.bval = in;
-		if (StrafeLegitMod.instance.saveLoad != null) {
-			StrafeLegitMod.instance.saveLoad.save();
+		if (SLM.instance.saveLoad != null) {
+			SLM.instance.saveLoad.save();
 		}
 	}
 	
@@ -97,8 +90,8 @@ public class Setting {
 
 	public void setValDouble(double in){
 		this.dval = in;
-		if (StrafeLegitMod.instance.saveLoad != null) {
-			StrafeLegitMod.instance.saveLoad.save();
+		if (SLM.instance.saveLoad != null) {
+			SLM.instance.saveLoad.save();
 		}
 	}
 	
