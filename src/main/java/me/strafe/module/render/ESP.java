@@ -5,12 +5,11 @@ import me.strafe.module.Category;
 import me.strafe.module.Module;
 import me.strafe.settings.Setting;
 import me.strafe.utils.Stolenutils;
+import me.strafe.utils.TimeHelper;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -19,17 +18,31 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.ArrayList;
 
 public class ESP extends Module {
+    TimeHelper timer = new TimeHelper();
     public ESP() {
         super("ESP","ESP", Category.RENDER);
         SLM.instance.settingsManager.rSetting(new Setting("Wolf Slayer", this, false));
         SLM.instance.settingsManager.rSetting(new Setting("Magma Cube", this, false));
         SLM.instance.settingsManager.rSetting(new Setting("Invisible Creeper", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Cave Spiders", this, false));
+        SLM.instance.settingsManager.rSetting(new Setting("Cave Spiders Ding Ding Ding", this, false));
     }
 
     @SubscribeEvent
     public void r1(RenderWorldLastEvent event) {
         if (mc.thePlayer == null || mc.theWorld == null) return;
         for (Entity entity : mc.theWorld.loadedEntityList) {
+            if (entity instanceof EntityIronGolem) {
+                Stolenutils.HUD.drawBoxAroundEntity(entity, 1, 0, 0, 0, false);
+            }
+            if (SLM.instance.settingsManager.getSettingByName(this, "Cave Spiders").getValBoolean()) {
+                if (entity instanceof EntityCaveSpider) {
+                    Stolenutils.HUD.drawBoxAroundEntity(entity,3,0,0,0,false);
+                    if (SLM.instance.settingsManager.getSettingByName(this, "Cave Spiders Ding Ding Ding").getValBoolean() && mc.thePlayer.ticksExisted % 2 == 0) {
+                        mc.thePlayer.playSound("random.orb", 1, 0.5F);
+                    }
+                }
+            }
             //Wolf
             if (SLM.instance.settingsManager.getSettingByName(this, "Wolf Slayer").getValBoolean()) {
                 if (entity instanceof EntityArmorStand) {

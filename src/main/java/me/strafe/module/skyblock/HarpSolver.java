@@ -25,7 +25,7 @@ public class HarpSolver extends Module {
 
     @SubscribeEvent
     public void onBackgroundDrawn(ChestBackgroundDrawnEvent event) {
-        if (event.displayName.startsWith("Harp -")) {
+        if (event.displayName.contains("Harp")) {
             int i;
             if (!click) {
                 StringBuilder currentTag = new StringBuilder();

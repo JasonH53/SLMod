@@ -12,6 +12,8 @@ import me.strafe.module.fishing.AntiAfk;
 import me.strafe.module.fishing.SlugFishAutoFish;
 import me.strafe.module.fishing.ThunderAura;
 import me.strafe.module.kuudra.*;
+import me.strafe.module.others.GuessTheBuild;
+import me.strafe.module.others.MurderMystery;
 import me.strafe.module.render.*;
 import me.strafe.module.skyblock.*;
 import net.minecraft.client.Minecraft;
@@ -50,6 +52,10 @@ public class ModuleManager {
         this.modules.add(new JerryBoxes());
         this.modules.add(new PeltsHelper());
         this.modules.add(new HarpSolver());
+        this.modules.add(new ReforgeClicker());
+        this.modules.add(new AutoFarm());
+        this.modules.add(new Chay());
+        this.modules.add(new D4MIT());
 
         //Kuudra
         this.modules.add(new AutoKuudra());
@@ -64,6 +70,10 @@ public class ModuleManager {
         this.modules.add(new SlugFishAutoFish());
         this.modules.add(new ThunderAura());
         this.modules.add(new PlasmaPlacer());
+
+        //Others
+        this.modules.add(new GuessTheBuild());
+        this.modules.add(new MurderMystery());
     }
 
     public Module getModule(String name) {
