@@ -79,7 +79,7 @@ public class SlugFishAutoFish extends Module {
         RotationUtils.reset();
 
         if (SLM.instance.settingsManager.getSettingByName(this, "Ember Armor Wardrobe Slot").getValDouble() == 0 || SLM.instance.settingsManager.getSettingByName(this, "Trophy Armor Wardrobe Slot").getValDouble() == 0) {
-            ChatUtils.addChatMessage("Configure your trophy and ember slot nigga");
+            ChatUtils.addChatMessage("Configure your trophy and ember slot");
             this.toggle();
             return;
         }
